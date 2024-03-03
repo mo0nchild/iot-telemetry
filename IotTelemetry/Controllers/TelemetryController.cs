@@ -7,20 +7,24 @@ using Microsoft.Extensions.Caching.Memory;
 namespace IotTelemetry.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("telemetry")]
 public class TelemetryController(ILogger<TelemetryController> logger, IMemoryCache cache) : ControllerBase
 {
     private readonly ILogger<TelemetryController> _logger = logger;
     private readonly IMemoryCache _cache = cache;
-
     /// <summary>
     /// Возвращает данные с датчиков
     /// </summary>
     /// <returns>температура, влажность, загрязнение</returns>
-    [HttpGet(Name = "get_indicators")]
+    [Route("sensors", Name = "GetSensors"), HttpGet]
     public IActionResult TestDb()
     {
-        _logger.LogInformation($"Fetch data at {DateTime.UtcNow}");
-        return Ok((Indicator)_cache.Get("info")!);
+        //this._logger.LogInformation($"Fetch data at {DateTime.UtcNow}");
+        if (this._cache.TryGetValue("info", out var result))
+        {
+            return this.Ok((Indicator)result!);
+        }
+        return this.BadRequest("Данные не были получены");
+        
     }
 }
