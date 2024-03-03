@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotTelemetry", "IotTelemetry\IotTelemetry.csproj", "{779D3BFB-827A-4928-ACC0-12173BA0BDE7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{779D3BFB-827A-4928-ACC0-12173BA0BDE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{779D3BFB-827A-4928-ACC0-12173BA0BDE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{779D3BFB-827A-4928-ACC0-12173BA0BDE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{779D3BFB-827A-4928-ACC0-12173BA0BDE7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F923EA1F-D74B-4C6F-BDD6-17BF8871A704}
+	EndGlobalSection
+EndGlobal
