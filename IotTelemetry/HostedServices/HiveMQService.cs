@@ -26,29 +26,26 @@ public class HiveMQService : IHostedService
     {
         this._logger.LogInformation($"Started");
         var item = new Indicator();
-
-        await Task.Run(async () =>
+        while (!cancellationToken.IsCancellationRequested)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            this._logger.LogInformation("Upload data tp broker");
+
+            this._mqttClient.OnMessageReceived += (sender, args) =>
             {
-                this._logger.LogInformation("Fetch data");
+                this._logger.LogInformation($"{args.PublishMessage.PayloadAsString}");
+            };
+            var response = await this._mqttClient.ConnectAsync();
+            await this._mqttClient.SubscribeAsync("esp8266/data");
 
-                this._mqttClient.OnMessageReceived += (sender, args) =>
-                {
-                    this._logger.LogInformation($"{args.PublishMessage.PayloadAsString}");
-                };
-                var response = await this._mqttClient.ConnectAsync();
-                await this._mqttClient.SubscribeAsync("esp8266/data");
+            await this._mqttClient.PublishAsync("esp8266/check", "alive");
 
-                await this._mqttClient.PublishAsync("esp8266/check", "alive");
+            _memoryCache.Set<Indicator>("info", item,
+                new MemoryCacheEntryOptions().
+                    SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
 
-                _memoryCache.Set<Indicator>("info", item,
-                    new MemoryCacheEntryOptions().
-                        SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-
-                await Task.Delay(1000);
-            }
-        });
+            await Task.Delay(1000);
+        }
+        
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
