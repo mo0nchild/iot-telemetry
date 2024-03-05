@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IotData.Entities
+namespace IotTelemetry.Data.Entities
 {
     public class Indicator
     {

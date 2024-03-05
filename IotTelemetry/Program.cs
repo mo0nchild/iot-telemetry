@@ -1,7 +1,6 @@
 
 using HiveMQtt.Client;
 using HiveMQtt.Client.Options;
-using IotData.Context;
 using IotTelemetry.HostedServices;
 
 namespace IotTelemetry
@@ -13,14 +12,13 @@ namespace IotTelemetry
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            builder.Services.AddHostedService<HiveMQService>();
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
             builder.Services.AddMemoryCache();
-
+            builder.Services.AddMqttService();
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

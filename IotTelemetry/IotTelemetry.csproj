@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IotData\IotData.csproj" />
+    <ProjectReference Include="..\IotTelemetry.Data\IotTelemetry.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,13 +3,13 @@
 #include <DHT.h>
 #include <PubSubClient.h>
 
-#define DHT_PIN D4
+#define DHT_PIN D2
 #define DHT_TYPE DHT22
 #define PIN_MQ135 A0
 #define MSG_BUFFER_SIZE	(255)
 
-const char* ssid     = "my-home";         // The SSID (name) of the Wi-Fi network 
-const char* password = "Prolodgy778";     // The Password of the Wi-Fi network 
+const char* ssid     = "ssid";         // The SSID (name) of the Wi-Fi network 
+const char* password = "password";     // The Password of the Wi-Fi network 
 const char* mqtt_server = "192.168.0.10";
 const unsigned int mqtt_port = 5000;
 

@@ -1,4 +1,4 @@
-﻿using IotData.Entities;
+﻿using IotTelemetry.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IotData.Context
+namespace IotTelemetry.Data.Context
 {
     public class ApplicationContext : DbContext
     {
