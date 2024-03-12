@@ -1,8 +1,8 @@
-using IotData.Context;
-using IotData.Entities;
+using IotTelemetry.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
 
 namespace IotTelemetry.Controllers;
 
@@ -17,9 +17,8 @@ public class TelemetryController(ILogger<TelemetryController> logger, IMemoryCac
     /// </summary>
     /// <returns>температура, влажность, загрязнение</returns>
     [Route("sensors", Name = "GetSensors"), HttpGet]
-    public IActionResult TestDb()
+    public IActionResult GetSensors()
     {
-        //this._logger.LogInformation($"Fetch data at {DateTime.UtcNow}");
         if (this._cache.TryGetValue("info", out var result))
         {
             return this.Ok((Indicator)result!);

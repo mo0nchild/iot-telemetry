@@ -10,8 +10,9 @@
 
 const char* ssid     = "ssid";         // The SSID (name) of the Wi-Fi network 
 const char* password = "password";     // The Password of the Wi-Fi network 
-const char* mqtt_server = "192.168.0.10";
-const unsigned int mqtt_port = 5000;
+const char* mqtt_server = "ipv4";
+const unsigned int mqtt_port = 0;
+const float ppm_infelicity = 100.0;
 
 DHT dht(DHT_PIN, DHT_TYPE);
 MQ135 mq135_sensor(PIN_MQ135);
@@ -90,7 +91,7 @@ void loop() {
     float temperature = dht.readTemperature();
 
     float ppm = mq135_sensor.getPPM();
-    float correctedPPM = mq135_sensor.getCorrectedPPM(temperature, humidity);
+    float correctedPPM = mq135_sensor.getCorrectedPPM(temperature, humidity) / ppm_infelicity;
 
     snprintf (msg, MSG_BUFFER_SIZE, "temp: %.3f; hum: %.3f; ppm: %.3f", temperature, humidity, correctedPPM);
     Serial.print("Publish message: ");

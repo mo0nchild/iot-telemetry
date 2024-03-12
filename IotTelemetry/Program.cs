@@ -5,32 +5,16 @@ using IotTelemetry.HostedServices;
 
 namespace IotTelemetry
 {
-    public class Program
+    internal class Program : object
     {
-        public static async Task Main(string[] args)
+        public Program() : base() { }
+        public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-            builder.Services.AddControllers();
-            
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddMemoryCache();
-            builder.Services.AddMqttService();
-            
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
-            app.MapControllers();
-            app.Run();
+                webBuilder.UseStartup<Startup>();
+            });
         }
     }
 }

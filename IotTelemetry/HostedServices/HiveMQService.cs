@@ -28,6 +28,7 @@ public class HiveMQService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         this._logger.LogInformation($"Connection to MQTT broker: {this._mqttClient.Options.Host}");
+        this._logger.LogInformation($"MQTT Broker port: {this._mqttClient.Options.Port}");
         this._mqttClient.OnMessageReceived += (sender, args) =>
         {
             //this._logger.LogInformation($"{args.PublishMessage.PayloadAsString}");
@@ -35,9 +36,9 @@ public class HiveMQService : BackgroundService
             try {
                 var item = new Indicator()
                 {
-                    Temperature = float.Parse(str[0].Replace("temp: ", "").Replace(".", ",")),
-                    Humidity = float.Parse(str[1].Replace("hum: ", "").Replace(".", ",")),
-                    Impurity = float.Parse(str[2].Replace("ppm: ", "").Replace(".", ",")),
+                    Temperature = float.Parse(str[0].Replace("temp: ", "").Replace(".", ".")),
+                    Humidity = float.Parse(str[1].Replace("hum: ", "").Replace(".", ".")),
+                    Impurity = float.Parse(str[2].Replace("ppm: ", "").Replace(".", ".")),
                 };
                 var dataTimer = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
                 this._memoryCache.Set<Indicator>("info", item, dataTimer);
@@ -50,7 +51,6 @@ public class HiveMQService : BackgroundService
         {
             //this._logger.LogInformation("Upload data to broker");
             await this._mqttClient.PublishAsync("esp8266/check", "alive");
-
             await Task.Delay(1000);
         }
     }

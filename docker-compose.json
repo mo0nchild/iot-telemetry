@@ -1,0 +1,83 @@
+{
+	"version": "3.4",
+	"services": {
+		"iottelemetry": {
+			"image": "${DOCKER_REGISTRY-}iottelemetry",
+			"build": {
+				"context": ".",
+				"dockerfile": "IotTelemetry/Dockerfile"
+			},
+			"environment": [
+				"ASPNETCORE_ENVIRONMENT=Development",
+				"ASPNETCORE_HTTP_PORTS=8080",
+				"MqttBroker__Hostname=172.24.0.4",
+				"MqttBroker__Port=1883",
+				"MqttBroker__ClientId=supertest"
+			],
+			"ports": [ "8080:8080" ],
+			"networks": {
+				"iottelemetry-network": {
+					"aliases": [ "iottelemetry" ],
+					"ipv4_address": "172.24.0.2"
+				}
+			},
+			"depends_on": {
+				"hivemq-broker": {
+					"condition": "service_healthy"
+				}
+			},
+			"restart": "on-failure:2"
+		},
+		"iottelemetry-webui": {
+			"image": "${DOCKER_REGISTRY-}iottelemetry-webui",
+			"build": {
+				"context": "IotTelemetry.WebUI/",
+				"dockerfile": "Dockerfile"
+			},
+			"networks": {
+				"iottelemetry-network": {
+					"aliases": [ "iottelemetry-webui" ],
+					"ipv4_address": "172.24.0.3"
+				}
+			},
+			"depends_on": {
+				"iottelemetry": {
+					"condition": "service_started"
+				}
+			},
+			"ports": [ "3000:3000" ],
+			"restart": "on-failure:2"
+		},
+		"hivemq-broker": {
+			"image": "hivemq/hivemq4",
+			"ports": [ "8000:8080", "5000:1883" ],
+			"networks": {
+				"iottelemetry-network": {
+					"aliases": [ "hivemq-broker" ],
+					"ipv4_address": "172.24.0.4"
+				}
+			},
+			"healthcheck": {
+				"test": [ "CMD", "echo", "\"\"", ">", "/dev/tcp/127.0.0.1/1883" ],
+				"interval": "5s",
+				"timeout": "5s",
+				"retries": 5
+			},
+			"restart": "always"
+		}
+	},
+	"networks": {
+		"iottelemetry-network": {
+			"driver": "bridge",
+			"ipam": {
+				"driver": "default",
+				"config": [
+					{
+						"gateway": "172.24.0.1",
+						"subnet": "172.24.0.0/24"
+					}
+				]
+			}
+		}
+	}
+}
