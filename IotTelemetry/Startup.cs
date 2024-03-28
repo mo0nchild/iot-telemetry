@@ -21,7 +21,7 @@ namespace IotTelemetry
 
             services.AddCors(options => options.AddPolicy(Startup.CorsName, builder =>
             {
-                builder.WithOrigins("http://192.168.0.10:3000")
+                builder.AllowAnyOrigin()
                     .AllowAnyMethod().AllowAnyHeader();
             }));
             services.AddMemoryCache();

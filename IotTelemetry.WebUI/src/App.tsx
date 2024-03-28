@@ -51,7 +51,7 @@ class App extends React.Component<{backendInfo: BackendInfo}, ITelemetryState> {
 		const references = this.telemetryRef.references;
 		const chart = Object.entries(references).map(([key, value]) => {
 			return (
-				<div className='col-12 col-xl-5 col-md-6'>
+				<div key={`div-${key}`} className='col-12 col-xl-5 col-md-6'>
 					<TelemetryChart info={chartInfo[key]} key={key} ref={value} />
 				</div>
 			);

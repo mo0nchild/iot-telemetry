@@ -26,7 +26,7 @@
 					"condition": "service_healthy"
 				}
 			},
-			"restart": "on-failure:2"
+			"restart": "on-failure:10"
 		},
 		"iottelemetry-webui": {
 			"image": "${DOCKER_REGISTRY-}iottelemetry-webui",
