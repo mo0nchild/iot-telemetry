@@ -20,6 +20,8 @@ namespace IotTelemetry
             services.AddSwaggerGen();
             services.AddDataBase();
 
+            services.AddAvgService();
+
             services.AddCors(options => options.AddPolicy(Startup.CorsName, builder =>
             {
                 builder.AllowAnyOrigin()

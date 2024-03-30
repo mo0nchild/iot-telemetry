@@ -1,4 +1,7 @@
-﻿namespace IotTelemetry.HostedServices
+﻿using IotTelemetry.Infrastructure;
+using IotTelemetry.Services;
+
+namespace IotTelemetry.HostedServices
 {
     public static class Bootstrapper : object
     {
@@ -11,5 +14,8 @@
             
             return collection;
         }
+
+        public static IServiceCollection AddAvgService(this IServiceCollection collection)
+            => collection.AddTransient<IAveageSensorService,AverageSensorService>();
     }
 }
