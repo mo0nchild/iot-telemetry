@@ -21,7 +21,7 @@ public class TelemetryController(ILogger<TelemetryController> logger, IMemoryCac
     {
         if (this._cache.TryGetValue("info", out var result))
         {
-            return this.Ok((Indicator)result!);
+            return this.Ok((Sensor)result!);
         }
         return this.BadRequest("Данные не были получены");
         

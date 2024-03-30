@@ -1,6 +1,6 @@
 ﻿
+using IotTelemetry.Data;
 using IotTelemetry.HostedServices;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace IotTelemetry
 {
@@ -18,6 +18,7 @@ namespace IotTelemetry
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.AddDataBase();
 
             services.AddCors(options => options.AddPolicy(Startup.CorsName, builder =>
             {
