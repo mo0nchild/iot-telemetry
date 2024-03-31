@@ -17,15 +17,14 @@ html, body {
   height: 100%;
   margin: 0;
 }
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
 a:hover {
   color: #535bf2;
-}
-
+} */
 body {
   margin: 0;
   display: flex;
@@ -35,18 +34,18 @@ body {
   min-width: 100%;
   min-height: 100%;
 }
-
-h1 {
+/* h1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
+} */
 #header, #footer {
   width: 100%;
 }
 #main-content {
   flex-grow: 1;
+  width: 100%;
 }
-button {
+/* button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
@@ -76,4 +75,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

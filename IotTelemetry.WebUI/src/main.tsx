@@ -31,12 +31,6 @@ export const chartInfo: TelemetryChartInfo = {
 		name: 'Загрязнение'
 	},
 };
-// export const backendRequest: ApiAccesor.ResourceInfo = {
-// 	accesskey: 'a81a0933-0456-4883-aec8-b9a9198b25e4',
-// 	method: 'GET',
-// 	timeout: 2000,
-// 	url: 'your-url-to-api'
-// };
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<App backendInfo={backendRequest} />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import TelemetryChart from "./TelemetryChart";
 import { ITelemetryState } from "../App";
 import React from "react";

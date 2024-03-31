@@ -8,8 +8,10 @@ class TelemetryChart extends React.Component<{info: ChartInfo}, ChartState> {
     private chartStyle: React.CSSProperties = {
         borderRadius: '20px',
         backgroundColor: '#444',
-        border: '1px solid #FFF',
+        border: '2px solid #FFF',
         padding: '10px',
+        width: '100%',
+        height: '100%'
     }
     constructor(prop: {info: ChartInfo}) {
         super(prop);

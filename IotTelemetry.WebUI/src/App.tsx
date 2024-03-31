@@ -1,8 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import TelemetryChart from './components/TelemetryChart';
-import Reference from './components/TelemetryRef';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Combobox from "react-widgets/Combobox";
+
+import { Chart, ChartRef } from './components/Imports'
 import ApiAccesor from './services/ApiAccessor'
 import { chartInfo } from './main'
+import { requestsTypes, RequestType } from './services/ApiConfig'
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "react-widgets/styles.css";
 import './App.css';
 
 export interface ITelemetryState {
@@ -14,8 +23,11 @@ type BackendInfo = ApiAccesor.ResourceInfo;
 type BackendService = ApiAccesor.IApiAccessor;
 
 class App extends React.Component<{backendInfo: BackendInfo}, ITelemetryState> {
-	private telemetryRef: Reference.ITelemetryRef = new Reference.TelemetryRef();
-	private telemetryService: BackendService = new ApiAccesor.ApiAccessor();
+	private telemetryRef: ChartRef = new ChartRef();
+	private telemetryService: BackendService = new ApiAccesor.ApiAccessor(
+		this.props.backendInfo);
+	private requestType: ApiAccesor.RequestInfo | null = null;
+	private intervalId: number | null = null;
 	public state: ITelemetryState = {
 		temperature: 0,
 		humidity: 0,
@@ -25,14 +37,11 @@ class App extends React.Component<{backendInfo: BackendInfo}, ITelemetryState> {
 		super(prop);
 	}
 	public componentDidMount(): void {
-		setInterval(() => this.updateTelemetry(), 2000);
+		this.intervalId = setInterval(() => this.updateTelemetry(), 1000);
 	}
 	private getTelemetryFromServer = async (): Promise<ITelemetryState> => 
-	{
-		const backendInfo: BackendInfo = this.props.backendInfo;
-		return await this.telemetryService
-			.getDataFromResource<ITelemetryState>(backendInfo);
-	}
+		await this.telemetryService.getDataFromResource<ITelemetryState>(this.requestType);
+
 	private updateTelemetry = async (): Promise<void> => {
 		try {
 			const result = await this.getTelemetryFromServer();
@@ -51,15 +60,35 @@ class App extends React.Component<{backendInfo: BackendInfo}, ITelemetryState> {
 		const references = this.telemetryRef.references;
 		const chart = Object.entries(references).map(([key, value]) => {
 			return (
-				<div key={`div-${key}`} className='col-12 col-xl-5 col-md-6'>
-					<TelemetryChart info={chartInfo[key]} key={key} ref={value} />
-				</div>
+				<Col key={`div-${key}`} xl={'4'} md={'6'} sm={'12'}>
+					<Chart info={chartInfo[key]} key={key} ref={value} />
+				</Col>
 			);
 		});
-		const rowClass = 'row g-4 justify-content-center justify-content-md-start';
+		const comboBoxStyle: React.CSSProperties = { color: '#FFF' }
 		return (
-			<div className="container text-center">
-				<div className={rowClass}>{chart}</div>
+			<div className='mx-0 mx-md-4'>
+				<Container className='d-flex flex-column'>
+					<Row className='justify-content-start'>
+						<Col xs={'12'} md={'6'} xl={'4'}>
+							<p style={{color: '#FFF', textAlign: 'start', margin: '0px 0px 5px'}}>
+								Выберите период:
+							</p>
+							<Combobox defaultValue={requestsTypes[0].name} style={comboBoxStyle}
+								data={requestsTypes} dataKey='name' textField='name'
+								onChange={(value) => {
+									const getData = (value as RequestType).value;
+									this.requestType = getData == null ? null : getData();
+									
+									if(this.intervalId != null) clearInterval(this.intervalId);
+									this.componentDidMount();
+								}}
+							/>
+						</Col>
+					</Row>
+					<hr className='main-divider'/>
+					<Row className='g-4'>{chart}</Row>
+				</Container>
 			</div>
 		);
 	}

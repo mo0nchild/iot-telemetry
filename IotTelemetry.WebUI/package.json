@@ -11,13 +11,18 @@
   },
   "dependencies": {
     "apexcharts": "^3.46.0",
+    "bootstrap": "^5.3.3",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
-    "react-gauge-component": "^1.2.0"
+    "react-gauge-component": "^1.2.0",
+    "react-widgets": "^5.8.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",
+    "@types/react-bootstrap": "^0.32.36",
     "@types/react-dom": "^18.2.19",
+    "@types/react-widgets": "^4.4.12",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "@vitejs/plugin-react": "^4.2.1",
