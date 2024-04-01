@@ -64,6 +64,18 @@
 				"retries": 5
 			},
 			"restart": "always"
+		},
+		"postgres":{
+			"image": "postgres:latest",
+			"container_name": "postgres",
+			"environment":[
+				"POSTGRES_NAME = postgres",
+				"POSTGRES_PASSWORD = 123",
+				"POSTGRES_DB = telemetry_db"
+			],
+			"ports":["5432:5432"],
+			"networks": "iottelemetry-network",
+			"volumes": "postgres-data:/var/lib/postgresql/data"
 		}
 	},
 	"networks": {
@@ -79,5 +91,6 @@
 				]
 			}
 		}
-	}
+	},
+	"volumes": "postgres-data"
 }
