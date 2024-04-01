@@ -2,10 +2,10 @@
 using HiveMQtt.Client.Options;
 using HiveMQtt.Client;
 using Microsoft.Extensions.Caching.Memory;
-using IotData.Entities;
-using System.Threading;
 using Microsoft.Extensions.Options;
-using System.Globalization;
+using IotTelemetry.Data.Entities;
+using IotTelemetry.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace IotTelemetry.HostedServices;
 
@@ -14,12 +14,16 @@ public class HiveMQService : BackgroundService
     protected readonly ILogger<HiveMQService> _logger = default!;
     protected readonly HiveMQClient _mqttClient = default!;
     protected readonly IMemoryCache _memoryCache = default!;
-    public HiveMQService(ILogger<HiveMQService> logger, 
+    protected readonly IDbContextFactory<TelemetryDbContext> _factory = default!;
+    public HiveMQService(ILogger<HiveMQService> logger,
         IMemoryCache memoryCache,
-        IOptions<MqttServerOption> options) : base() 
+        IOptions<MqttServerOption> options,
+        IDbContextFactory<TelemetryDbContext> factory
+        ) : base() 
     {
         this._logger = logger;
         this._memoryCache = memoryCache;
+        this._factory = factory;
         this._mqttClient = new HiveMQClient(new HiveMQClientOptions()
         {
             Host = options.Value.Hostname,
@@ -30,19 +34,30 @@ public class HiveMQService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         this._logger.LogInformation($"Connection to MQTT broker: {this._mqttClient.Options.Host}");
-        this._mqttClient.OnMessageReceived += (sender, args) =>
+        this._logger.LogInformation($"MQTT Broker port: {this._mqttClient.Options.Port}");
+        this._mqttClient.OnMessageReceived += async (sender, args) =>
         {
             //this._logger.LogInformation($"{args.PublishMessage.PayloadAsString}");
             var str = args.PublishMessage.PayloadAsString.Split("; ");
             try {
-                var item = new Indicator()
+                var item = new Sensor()
                 {
-                    Temperature = float.Parse(str[0].Replace("temp: ", "").Replace(".", ",")),
-                    Humidity = float.Parse(str[1].Replace("hum: ", "").Replace(".", ",")),
-                    Impurity = float.Parse(str[2].Replace("ppm: ", "").Replace(".", ",")),
+                    Temperature = float.Parse(str[0].Replace("temp: ", "").Replace(".", ".")),
+                    Humidity = float.Parse(str[1].Replace("hum: ", "").Replace(".", ".")),
+                    Impurity = float.Parse(str[2].Replace("ppm: ", "").Replace(".", ".")),
+                    DateFetch = DateTime.Now
                 };
                 var dataTimer = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
-                this._memoryCache.Set<Indicator>("info", item, dataTimer);
+                this._memoryCache.Set<Sensor>("info", item, dataTimer);
+
+                //Могу упаковать в factory, но мне кажется медленее будет
+                // TODO: сделал через factory
+                using (var _context = await this._factory.CreateDbContextAsync())
+                {
+                    item.DateFetch = DateTime.UtcNow;
+                    await _context.SensorsData.AddAsync(item);
+                    await _context.SaveChangesAsync();
+                }
             }
             catch(Exception error) { this._logger.LogWarning(error.Message); }
         };
@@ -52,7 +67,6 @@ public class HiveMQService : BackgroundService
         {
             //this._logger.LogInformation("Upload data to broker");
             await this._mqttClient.PublishAsync("esp8266/check", "alive");
-
             await Task.Delay(1000);
         }
     }
