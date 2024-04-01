@@ -14,8 +14,7 @@ namespace IotTelemetry.HostedServices
             
             return collection;
         }
-
         public static IServiceCollection AddAvgService(this IServiceCollection collection)
-            => collection.AddTransient<IAveageSensorService,AverageSensorService>();
+            => collection.AddTransient<IAverageSensorService, AverageSensorService>();
     }
 }

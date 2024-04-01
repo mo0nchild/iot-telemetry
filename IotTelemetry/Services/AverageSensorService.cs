@@ -5,15 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IotTelemetry.Services;
 
-public class AverageSensorService(ILogger<AverageSensorService> logger, TelemetryDbContext context) : IAverageSensorService
+public class AverageSensorService(ILogger<AverageSensorService> logger, 
+    IDbContextFactory<TelemetryDbContext> factory) : IAverageSensorService
 {
     private readonly ILogger<AverageSensorService> _logger = logger;
-    private readonly TelemetryDbContext _context = context;
+    private readonly IDbContextFactory<TelemetryDbContext> _factory = factory;
 
     public async Task<Sensor?> GetAverageData(DateTime firstDate, DateTime secondDate)
     {
-        if (!_context.SensorsData.Any(x => x.DateFetch == firstDate || x.DateFetch == secondDate))
-            return null;
+        using var _context = await this._factory.CreateDbContextAsync();
+        //if (!_context.SensorsData.Any(x => x.DateFetch == firstDate || x.DateFetch == secondDate))
+        //    return null;
 
         var data = await _context.SensorsData.
             Where(x => x.DateFetch > firstDate && x.DateFetch < secondDate).

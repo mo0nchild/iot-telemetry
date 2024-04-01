@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using IotTelemetry.Data.Entities;
 using IotTelemetry.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace IotTelemetry.HostedServices;
 
@@ -13,16 +14,16 @@ public class HiveMQService : BackgroundService
     protected readonly ILogger<HiveMQService> _logger = default!;
     protected readonly HiveMQClient _mqttClient = default!;
     protected readonly IMemoryCache _memoryCache = default!;
-    protected readonly TelemetryDbContext _context = default!;
+    protected readonly IDbContextFactory<TelemetryDbContext> _factory = default!;
     public HiveMQService(ILogger<HiveMQService> logger,
         IMemoryCache memoryCache,
         IOptions<MqttServerOption> options,
-        TelemetryDbContext context
+        IDbContextFactory<TelemetryDbContext> factory
         ) : base() 
     {
         this._logger = logger;
         this._memoryCache = memoryCache;
-        this._context = context;
+        this._factory = factory;
         this._mqttClient = new HiveMQClient(new HiveMQClientOptions()
         {
             Host = options.Value.Hostname,
@@ -48,8 +49,15 @@ public class HiveMQService : BackgroundService
                 };
                 var dataTimer = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
                 this._memoryCache.Set<Sensor>("info", item, dataTimer);
+
                 //Могу упаковать в factory, но мне кажется медленее будет
-                await this._context.SensorsData.AddAsync(item); await this._context.SaveChangesAsync();
+                // TODO: сделал через factory
+                using (var _context = await this._factory.CreateDbContextAsync())
+                {
+                    item.DateFetch = DateTime.UtcNow;
+                    await _context.SensorsData.AddAsync(item);
+                    await _context.SaveChangesAsync();
+                }
             }
             catch(Exception error) { this._logger.LogWarning(error.Message); }
         };

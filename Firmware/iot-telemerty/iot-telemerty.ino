@@ -8,9 +8,9 @@
 #define PIN_MQ135 A0
 #define MSG_BUFFER_SIZE	(255)
 
-const char* ssid     = "mo0nchild";         // The SSID (name) of the Wi-Fi network 
-const char* password = "yarikgey";     // The Password of the Wi-Fi network 
-const char* mqtt_server = "192.168.43.248";
+const char* ssid     = "my-home";         // The SSID (name) of the Wi-Fi network 
+const char* password = "Prolodgy778";     // The Password of the Wi-Fi network 
+const char* mqtt_server = "192.168.0.10";
 const unsigned int mqtt_port = 5000;
 const float ppm_infelicity = 100.0;
 

@@ -45,6 +45,7 @@ class App extends React.Component<{backendInfo: BackendInfo}, ITelemetryState> {
 	private updateTelemetry = async (): Promise<void> => {
 		try {
 			const result = await this.getTelemetryFromServer();
+			console.log(result);
 			this.setState({
 				temperature: result.temperature,
 				humidity: result.humidity,

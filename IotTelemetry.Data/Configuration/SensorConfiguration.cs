@@ -19,7 +19,7 @@ public static class SensorsConfiguration
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.DateFetch)
-                .HasDefaultValueSql("now()")
+                
                 .HasColumnName("date_fetch");
             entity.Property(e => e.Humidity).HasColumnName("humidity");
             entity.Property(e => e.Impurity).HasColumnName("impurity");

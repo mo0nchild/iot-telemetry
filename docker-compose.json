@@ -10,11 +10,11 @@
 			"environment": [
 				"ASPNETCORE_ENVIRONMENT=Development",
 				"ASPNETCORE_HTTP_PORTS=8080",
-				"MqttBroker__Hostname=172.24.0.4",
+				"MqttBroker__Hostname=hivemq-broker",
 				"MqttBroker__Port=1883",
 				"MqttBroker__ClientId=supertest"
 			],
-			"ports": [ "8080:8080" ],
+			"ports": [ "8000:8080" ],
 			"networks": {
 				"iottelemetry-network": {
 					"aliases": [ "iottelemetry" ],
@@ -24,6 +24,9 @@
 			"depends_on": {
 				"hivemq-broker": {
 					"condition": "service_healthy"
+				},
+				"postgres": {
+					"condition": "service_started"
 				}
 			},
 			"restart": "on-failure:10"
@@ -50,7 +53,7 @@
 		},
 		"hivemq-broker": {
 			"image": "hivemq/hivemq4",
-			"ports": [ "8000:8080", "5000:1883" ],
+			"ports": [ "8001:8080", "5000:1883" ],
 			"networks": {
 				"iottelemetry-network": {
 					"aliases": [ "hivemq-broker" ],
@@ -69,13 +72,18 @@
 			"image": "postgres:latest",
 			"container_name": "postgres",
 			"environment":[
-				"POSTGRES_NAME = postgres",
-				"POSTGRES_PASSWORD = 123",
-				"POSTGRES_DB = telemetry_db"
+				"POSTGRES_NAME=postgres",
+				"POSTGRES_PASSWORD=1234567890",
+				"POSTGRES_DB=telemetry_db"
 			],
-			"ports":["5432:5432"],
-			"networks": "iottelemetry-network",
-			"volumes": "postgres-data:/var/lib/postgresql/data"
+			"ports":["5433:5432"],
+			"networks": {
+				"iottelemetry-network": {
+					"aliases": [ "postgres" ],
+					"ipv4_address": "172.24.0.5"
+				}
+			},
+			"volumes": [ "./postgres-data:/var/lib/postgresql/data" ]
 		}
 	},
 	"networks": {
@@ -91,6 +99,5 @@
 				]
 			}
 		}
-	},
-	"volumes": "postgres-data"
+	}
 }

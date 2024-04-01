@@ -9,7 +9,7 @@ lerna-debug.log*
 
 ./src/services/ApiConfig.ts
 
-node_modules
+./node_modules
 dist
 dist-ssr
 *.local

@@ -4,7 +4,6 @@ export namespace ApiAccessors {
     export type ResourceInfo = {
         readonly baseUrl: string;
         readonly timeout: number;
-        readonly method: string;
         readonly accesskey: string;
     };
     export type RequestInfo = {
@@ -31,15 +30,18 @@ export namespace ApiAccessors {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), this.apiInfo.timeout);
             const requestInfo: RequestInit = {
-                method: this.apiInfo.method,
+                method: 'GET',
                 signal: controller.signal,
                 headers: {
                     'AccessKey': this.apiInfo.accesskey,
-                    'Content-Type': 'application/json'
-                },
-                body: request == null ? null : JSON.stringify(request)
+                    'Content-Type': 'application/json',
+                }
             };
-            const path = request == null ? 'current' : 'average'
+            const path = request == null ? 'current' : 'average?' + 
+                new URLSearchParams({
+                    'fromDate': request.fromDate,
+                    'toDate': request.toDate,
+                }).toString()
             let result: Response;
             try {
                 result = await fetch(`${this.apiInfo.baseUrl}/${path}`, requestInfo);

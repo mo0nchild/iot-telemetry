@@ -31,16 +31,18 @@ public class TelemetryController(ILogger<TelemetryController> logger, IMemoryCac
     /// <summary>
     /// Возвращает данные с датчиков за определённый интервал
     /// </summary>
-    /// <param name="firstDate">Первая дата</param>
-    /// <param name="secondDate">Вторая дата</param>
+    /// <param name="fromDate">Первая дата</param>
+    /// <param name="toDate">Вторая дата</param>
     /// <returns>температура, влажность, загрязнение</returns>
-    [Route("average", Name ="GetAverageSensors"),HttpGet]
-    public IActionResult GetAverage(DateTime firstDate, DateTime secondDate)
+    [Route("average", Name ="GetAverageSensors"), HttpGet]
+    public async Task<IActionResult> GetAverage([FromQuery] string fromDate, [FromQuery] string toDate)
     {
-        var result = _averageSensorService.GetAverageData(firstDate, secondDate);
-
+        var result = await _averageSensorService.GetAverageData(
+                DateTime.Parse(fromDate).ToUniversalTime(),
+                DateTime.Parse(toDate).ToUniversalTime());
         if (result is null)
         {
+            this._logger.LogInformation($"\n\n\n\n{DateTime.Parse(fromDate).ToUniversalTime()}\n\n\n\n\n");
             return BadRequest("За данный интервал нет информации");
         }
         return Ok(result);
