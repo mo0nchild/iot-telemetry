@@ -1,0 +1,1 @@
+docker compose --file docker-compose.json up --build
