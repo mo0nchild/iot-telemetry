@@ -1,29 +1,30 @@
-﻿using IotTelemetry.Data.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IotTelemetry.Data.Entities; //Это библиотека с сущностью бд
+using Microsoft.EntityFrameworkCore; //Это основная библиотека Entity Framework Core, которая предоставляет функциональность для работы с базами данных в .NET Core приложениях. 
 
-namespace IotTelemetry.Data.Configuration;
-public static class SensorsConfiguration
+namespace IotTelemetry.Data.Configuration
 {
-    public static void ConfigureSensor(this ModelBuilder modelBuilder)
+    // Статический класс SensorsConfiguration, содержащий метод расширения для настройки сущности Sensor
+    public static class SensorsConfiguration
     {
-        modelBuilder.Entity<Sensor>(entity =>
+        // Метод ConfigureSensor предоставляет настройки для сущности Sensor с использованием Fluent API
+        public static void ConfigureSensor(this ModelBuilder modelBuilder)
         {
-            entity.HasKey(e => e.Id).HasName("sensors_data_pkey");
+            // Настраиваем сущность Sensor
+            modelBuilder.Entity<Sensor>(entity =>
+            {
+                // Устанавливаем первичный ключ
+                entity.HasKey(e => e.Id).HasName("sensors_data_pkey");
 
-            entity.ToTable("sensors_data");
+                // Задаем имя таблицы базы данных, с которой связана сущность
+                entity.ToTable("sensors_data");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.DateFetch)
-                
-                .HasColumnName("date_fetch");
-            entity.Property(e => e.Humidity).HasColumnName("humidity");
-            entity.Property(e => e.Impurity).HasColumnName("impurity");
-            entity.Property(e => e.Temperature).HasColumnName("temperature");
-        });
+                // Настраиваем свойства сущности, определяя их названия и типы
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.DateFetch).HasColumnName("date_fetch");
+                entity.Property(e => e.Humidity).HasColumnName("humidity");
+                entity.Property(e => e.Impurity).HasColumnName("impurity");
+                entity.Property(e => e.Temperature).HasColumnName("temperature");
+            });
+        }
     }
 }
