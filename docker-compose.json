@@ -18,14 +18,14 @@
 			"networks": {
 				"iottelemetry-network": {
 					"aliases": [ "iottelemetry" ],
-					"ipv4_address": "172.24.0.2"
+					"ipv4_address": "172.25.0.2"
 				}
 			},
 			"depends_on": {
 				"hivemq-broker": {
 					"condition": "service_healthy"
 				},
-				"postgres": {
+				"iotdatabase": {
 					"condition": "service_started"
 				}
 			},
@@ -40,7 +40,7 @@
 			"networks": {
 				"iottelemetry-network": {
 					"aliases": [ "iottelemetry-webui" ],
-					"ipv4_address": "172.24.0.3"
+					"ipv4_address": "172.25.0.3"
 				}
 			},
 			"depends_on": {
@@ -57,7 +57,7 @@
 			"networks": {
 				"iottelemetry-network": {
 					"aliases": [ "hivemq-broker" ],
-					"ipv4_address": "172.24.0.4"
+					"ipv4_address": "172.25.0.4"
 				}
 			},
 			"healthcheck": {
@@ -68,19 +68,18 @@
 			},
 			"restart": "always"
 		},
-		"postgres":{
+		"iotdatabase":{
 			"image": "postgres:latest",
-			"container_name": "postgres",
 			"environment":[
 				"POSTGRES_NAME=postgres",
 				"POSTGRES_PASSWORD=1234567890",
 				"POSTGRES_DB=telemetry_db"
 			],
-			"ports":["5433:5432"],
+			"ports":["7272:5432"],
 			"networks": {
 				"iottelemetry-network": {
 					"aliases": [ "postgres" ],
-					"ipv4_address": "172.24.0.5"
+					"ipv4_address": "172.25.0.5"
 				}
 			},
 			"volumes": [ "./postgres-data:/var/lib/postgresql/data" ]
@@ -93,8 +92,8 @@
 				"driver": "default",
 				"config": [
 					{
-						"gateway": "172.24.0.1",
-						"subnet": "172.24.0.0/24"
+						"gateway": "172.25.0.1",
+						"subnet": "172.25.0.0/24"
 					}
 				]
 			}
