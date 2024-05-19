@@ -1,27 +1,36 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Устанавливаем кодировку страницы -->
     <meta charset="utf-8" />
+    <!-- Устанавливаем иконку сайта -->
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- Устанавливаем метатег для корректного отображения на мобильных устройствах -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Устанавливаем заголовок страницы -->
     <title>Телеметрия</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
+    <!-- Подключаем стили Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   </head>
   <body style="background-color: #242424; color: #FFF;">
+    <!-- Создаем навигационную панель -->
     <nav id="header" class="navbar navbar-expand-md sticky-top border-bottom border-2" style="background-color: #444;">
       <div class="container-fluid">
+        <!-- Бренд или название сайта -->
         <a class="navbar-brand text-light" href="#">Телеметрия</a>
+        <!-- Кнопка для раскрытия меню на мобильных устройствах -->
         <button class="navbar-toggler" type="button" style="border-color: #FFF"
             data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
           <span class="bi bi-justify" style="color: white"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent"
-            style="justify-content: center;">
+        <!-- Основное содержимое навигационной панели -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: center;">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- Ссылка на главную страницу -->
             <li class="nav-item">
               <a class="nav-link text-light active" aria-current="page" href="#">Главная</a>
             </li>
+            <!-- Ссылка на внешний ресурс -->
             <li class="nav-item">
               <a class="nav-link text-light" href="https://github.com/mo0nchild/iot-telemetry">Ссылка</a>
             </li>
@@ -29,15 +38,20 @@
         </div>
       </div>
     </nav>
+    <!-- Основное содержимое страницы -->
     <main id="main-content">
       <div id="root"></div>
     </main>
+    <!-- Подвал страницы -->
     <footer id="footer" class="bg-body-tertiary text-center text-lg-start">
-      <div class="text-center p-3 text-" style="background-color: #444;">
+      <div class="text-center p-3" style="background-color: #444;">
         © 2024 Copyright:
         <a class="text-light" href="https://mdbootstrap.com/">ESP8266 Telemetry</a>
+      </div>
     </footer>
+    <!-- Подключаем основной скрипт приложения -->
     <script type="module" src="/src/main.tsx"></script>
+    <!-- Подключаем скрипты Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   </body>
 </html>
