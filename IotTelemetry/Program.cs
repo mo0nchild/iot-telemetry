@@ -1,20 +1,26 @@
-
-using HiveMQtt.Client;
-using HiveMQtt.Client.Options;
-using IotTelemetry.HostedServices;
-
 namespace IotTelemetry
 {
+    // Определение внутреннего класса Program
     internal class Program : object
     {
+        // Конструктор класса Program, вызывающий базовый конструктор
         public Program() : base() { }
-        public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
+
+        // Точка входа в приложение
+        public static void Main(string[] args)
+            // Создание и запуск хоста приложения
+            => CreateHostBuilder(args).Build().Run();
+
+        // Метод для создания и настройки хоста приложения
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
+            // Создание стандартного хоста с настройками по умолчанию
+            return Host.CreateDefaultBuilder(args)
+                // Конфигурация веб-хоста с использованием класса Startup
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
         }
     }
 }
